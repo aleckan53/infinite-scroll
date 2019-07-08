@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "alias": "infinite-scroll",
+  "name": "infinite-scroll",
+  "routes": [
+      {
+        "src": "^/static/(.*)",
+        "dest": "/static/$1"
+      },
+      {
+        "src": ".*",
+        "dest": "/index.html"
+      }
+  ]
+}
