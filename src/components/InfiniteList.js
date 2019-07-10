@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react';
 
 export default function InfiniteList(props) {
 
-  const [loadMore, setLoadMore] = useState(false);
+  const [loadMore, setLoadMore] = useState(true);
 
   useEffect(() => {
+    getData(loadMore);
     setLoadMore(false);
-    getData();
   }, [loadMore]);
-
 
   useEffect(() => {
     const list = document.getElementById('list')
@@ -19,28 +18,38 @@ export default function InfiniteList(props) {
         if(el.scrollTop + el.clientHeight === el.scrollHeight) {
           setLoadMore(true);
         }
-      })  
+      });  
     } else {  
-      // list has auto height   
+      // list has auto height  
       window.addEventListener('scroll', () => {
         if (window.scrollY + window.innerHeight === list.clientHeight + list.offsetTop) {
           setLoadMore(true);
         }
-      })
+      });
     }
   }, []);
 
+  useEffect(() => {
+    const list = document.getElementById('list');
 
-  const getData = () => {
-    fetch('https://dog.ceo/api/breeds/image/random/25')
-      .then(res => {
-        return !res.ok 
-        ? res.json().then(e => Promise.reject(e)) 
-        : res.json();
-      })
-      .then(res => {
-        props.setState([...props.state, ...res.message]);
-      });
+    if(list.clientHeight <= window.innerHeight && list.clientHeight) {
+      setLoadMore(true);
+    }
+  }, [props.state]);
+
+
+  const getData = (load) => {
+    if (load) {
+      fetch('https://dog.ceo/api/breeds/image/random/15')
+        .then(res => {
+          return !res.ok 
+          ? res.json().then(e => Promise.reject(e)) 
+          : res.json();
+        })
+        .then(res => {
+          props.setState([...props.state, ...res.message]);
+        });
+    }
   };
 
   return (
